@@ -1,10 +1,7 @@
 """SEO 分析 Agent - Vercel Serverless Function"""
 
 import json
-import sys
-import os
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from http.server import BaseHTTPRequestHandler
 
 from seo_agent import SEOAnalyzer
 from seo_report import generate_report

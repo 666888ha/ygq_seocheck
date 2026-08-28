@@ -1,10 +1,6 @@
 # 忽略网站项目文件，只提交 SEO Agent 相关文件
 *
 !/.gitignore
-!/seo_agent.py
-!/seo_report.py
-!/seo_web.py
-
 !/requirements.txt
 !/requirements_hf.txt
 !/render.yaml
@@ -13,6 +9,8 @@
 !/huggingface/**
 !/api/
 !/api/analyze.py
+!/api/seo_agent.py
+!/api/seo_report.py
 !/public/
 !/public/index.html
 !/vercel.json
