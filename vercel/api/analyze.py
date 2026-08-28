@@ -1,29 +1,49 @@
 """SEO 分析 Agent - Vercel Serverless Function"""
 
 import json
+from http.server import BaseHTTPRequestHandler
+from io import BytesIO
+
 from seo_agent import SEOAnalyzer
 from seo_report import generate_report
 
 
-def handler(request):
-    if request.method != "POST":
-        return {"statusCode": 405, "body": "Method Not Allowed"}
+class handler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length).decode("utf-8") if content_length else "{}"
 
-    try:
-        body = request.json() if hasattr(request, "json") else json.loads(request.body or "{}")
-    except Exception:
-        body = {}
+        try:
+            data = json.loads(body)
+        except Exception:
+            data = {}
 
-    url = (body.get("url") or "").strip()
-    if not url:
-        return {"statusCode": 400, "body": json.dumps({"error": "URL is required"})}
-    if not url.startswith("http"):
-        url = "https://" + url
+        url = (data.get("url") or "").strip()
+        if not url:
+            self._send(400, json.dumps({"error": "URL is required"}))
+            return
+        if not url.startswith("http"):
+            url = "https://" + url
 
-    try:
-        analyzer = SEOAnalyzer(url, timeout=10)
-        results = analyzer.run()
-        html = generate_report(results)
-        return {"statusCode": 200, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": html}
-    except Exception as e:
-        return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
+        try:
+            analyzer = SEOAnalyzer(url, timeout=10)
+            results = analyzer.run()
+            html = generate_report(results)
+            self._send(200, html, "text/html; charset=utf-8")
+        except Exception as e:
+            self._send(500, json.dumps({"error": str(e)}))
+
+    def do_GET(self):
+        if self.path == "/api/analyze":
+            self._send(405, json.dumps({"error": "Use POST method"}))
+        else:
+            self._send(404, "Not Found")
+
+    def _send(self, code, body, content_type="application/json"):
+        self.send_response(code)
+        self.send_header("Content-Type", content_type)
+        self.end_headers()
+        self.wfile.write(body.encode("utf-8"))
+
+    def log_message(self, format, *args):
+        pass
