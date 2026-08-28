@@ -1,8 +1,10 @@
 """SEO 分析 Agent - Vercel Serverless Function"""
 
 import json
-from http.server import BaseHTTPRequestHandler
-from io import BytesIO
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from seo_agent import SEOAnalyzer
 from seo_report import generate_report
@@ -26,7 +28,7 @@ class handler(BaseHTTPRequestHandler):
             url = "https://" + url
 
         try:
-            analyzer = SEOAnalyzer(url, timeout=10)
+            analyzer = SEOAnalyzer(url, timeout=8)
             results = analyzer.run()
             html = generate_report(results)
             self._send(200, html, "text/html; charset=utf-8")

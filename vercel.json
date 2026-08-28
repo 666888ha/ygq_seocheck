@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "api/analyze.py": {
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
     { "source": "/analyze", "destination": "/api/analyze" }
   ]
