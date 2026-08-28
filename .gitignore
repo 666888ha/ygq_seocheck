@@ -13,7 +13,9 @@
 !/README.md
 !/huggingface/**
 !/vercel/**
-!/api/**
-!/public/**
+!/api/
+!/api/analyze.py
+!/public/
+!/public/index.html
 !/vercel.json
 !/push_to_hf.py
