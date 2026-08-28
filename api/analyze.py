@@ -25,7 +25,7 @@ class handler(BaseHTTPRequestHandler):
             url = "https://" + url
 
         try:
-            analyzer = SEOAnalyzer(url, timeout=8)
+            analyzer = SEOAnalyzer(url, timeout=3)
             results = analyzer.run()
             html = generate_report(results)
             self._send(200, html, "text/html; charset=utf-8")

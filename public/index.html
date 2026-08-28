@@ -61,7 +61,7 @@ function analyze(){
     document.getElementById('btn').disabled=true;
     document.getElementById('loading').classList.add('show');
     document.getElementById('error').classList.remove('show');
-    fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:u}),signal:AbortSignal.timeout(9000)})
+    fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:u}),signal:AbortSignal.timeout(30000)})
     .then(function(r){return r.ok?r.text():r.text().then(function(t){throw new Error(t)})})
     .then(function(h){document.open();document.write(h);document.close()})
     .catch(function(e){document.getElementById('error').textContent='分析超时或失败，请尝试其他网址';document.getElementById('error').classList.add('show');document.getElementById('btn').disabled=false;document.getElementById('loading').classList.remove('show')});
